@@ -1,42 +1,209 @@
-from flask import Flask, render_template
+from flask import Flask,render_template
 import requests
 from dotenv import load_dotenv,dotenv_values
+app=Flask(__name__)
 
-app = Flask(__name__)
+config = dotenv_values('.env')
 
-config = dotenv_values ('.env')
-
-def get_weather_data(city):
+app = Flask (__name__)
+def get_weather_data (city):
     API_KEY = config['API_KEY']
-    url=f'https://api.openweathermap.org/data/2.5/weather?q={ city }&appid={API_KEY}&units=metric&lang=es'
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&lang&appid={API_KEY}'
     r = requests.get(url).json()
-    return r 
+    print(r)
+    return r
 
 @app.route('/prueba')
 def prueba():
-    clima = get_weather_data('Ambato')
-    temperatura = str(clima['main']['temp'])
+    clima=get_weather_data('london')
+    temperatura=str(clima['main']['temp'])
     descripcion= str(clima['weather'][0]['description'])
-    icono= str(clima['weather'][0]['icon'])
+    icono=str(clima['weather'][0]['icon'])
+    r_json={
+        'ciudad': 'london',
+        'temperatura':temperatura,
+        'descripcion': descripcion,
+        'icono': icono
+        }
+    return render_template('weather.html', clima = r_json)
+   
 
-    r_json= {
-            'ciudad':'Ambato',
-            'temperatura': temperatura,
-             'descripcion':descripcion,
-             'icono':icono
-             }  
-    return render_template('weather.html',clima=r_json)
+
 
 @app.route('/about')
-def about():
-    return render_template('about.html')
+def hello_CV():
+    return render_template('CV.html')
+
+
+if __name__ == '__main__':
+    app.run(debug = True)
+
+@app.route('/clima')
+def clima_page():
+    return render_template('resultado.json')
 
 @app.route('/clima')
 def clima():
-    return 'obtener todo la informacion del clima'
+    return 'CLIMA'
 
-if __name__ == '_main_':
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug = True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
