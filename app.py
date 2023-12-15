@@ -53,20 +53,14 @@ def search_pokemon(name):
 def detalle():
     return render_template('detalle.html')
 
-@app.route("/insert")
-def insert():
-    pokemon_name = request.args.get('name')
-    if pokemon_name:
-        image_url, height, weight, order, types = get_pokemon_data(pokemon_name)
-        if image_url:
-            obj = Pokemon(name=pokemon_name, height=height, weight=weight, order=order, type=types)
-            db.session.add(obj)
-            db.session.commit()
-            return 'Pokemon agregado'
-        else:
-            return 'No se encontró el Pokemon en la API'
-    else:
-        return 'No se proporcionó el nombre del Pokemon'
+@app.route("/insert_pokemon/<pokemon>")
+def insert(pokemon):
+    new_pokemon = pokemon
+    if new_pokemon:
+         obj = Pokemon(pokemon)
+         db.session.add(obj)
+         db.session.commit()
+    return 'Pokemon Agregado'
 
 @app.route("/select")
 def select():
