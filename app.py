@@ -28,18 +28,8 @@ def get_pokemon_data(pokemon):
 @app.route("/", methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        name_pokemon = request.form.get('name')
-        if name_pokemon:
-            data = get_pokemon_data(name_pokemon)
-        Pokemon = {
-        'photo': data.get['sprites']['other']['official-artwork']['front_default'],
-        'name': data.get['name'].upper(),
-        'height': data.get['height'],
-        'weight': data.get['weight'],
-        'order': data.get['order'], 
-        'type': ''
-        }
-        return search_pokemon(name_pokemon)
+        pokemon_name = request.form['pokemon_name']
+        return search_pokemon(pokemon_name)
 
     return render_template('pokemon.html', pokemon=None)
 
@@ -65,12 +55,18 @@ def detalle():
 
 @app.route("/insert")
 def insert():
-    new_pokemon= 'Ditto'
-    if new_pokemon:
-            obj = Pokemon(name=new_pokemon,height=1.75, weight=100, order=100, type='Normal')
+    pokemon_name = request.args.get('name')
+    if pokemon_name:
+        image_url, height, weight, order, types = get_pokemon_data(pokemon_name)
+        if image_url:
+            obj = Pokemon(name=pokemon_name, height=height, weight=weight, order=order, type=types)
             db.session.add(obj)
             db.session.commit()
-    return 'Pokemon Agregado'
+            return 'Pokemon agregado'
+        else:
+            return 'No se encontró el Pokemon en la API'
+    else:
+        return 'No se proporcionó el nombre del Pokemon'
 
 @app.route("/select")
 def select():
